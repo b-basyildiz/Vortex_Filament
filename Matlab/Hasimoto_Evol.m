@@ -20,9 +20,9 @@ s = linspace(s_span(1),s_span(2),iter);
 C_1 = C'; 
 T_1 = T'; 
 
-%plot3(C_1(1,:),C_1(2,:),C_1(3,:))
-%hold on
-%{
+plot3(C_1(1,:),C_1(2,:),C_1(3,:))
+hold on
+
 for i=1:2
     C_2 = Curve_Evol(C_1,T_1,s,1); 
     plot3(C_2(1,:),C_2(2,:),C_2(3,:))
@@ -30,7 +30,7 @@ for i=1:2
     T_1 = tangent(C_1,s); 
 end
 legend('C1','C2','C3','C4')
-%}
+
 
 %Constants
 tau0 = 1/2;
@@ -46,9 +46,11 @@ z = @(s,t) imag((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2
 %graphing constants
 
 %plot3(x(s,t),y(s,t),z(s,t))
+%{
 C_act = [x(s,t); y(s,t); z(s,t)]; 
 C_diff = C_act - C_1; 
 plot(s,vecnorm(C_diff))
+%}
 %{
 end
 title("Iteration Count vs Error for t = 0")
