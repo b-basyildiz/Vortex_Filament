@@ -1,26 +1,56 @@
 %iter_list = [2000,2500,5000,10000,50000];
 %hold on
 %for i = 1:length(iter_list)
-T0 = [1;0;0];
-N0 = [0,0.6,0.8];
-B0 = [0,-0.8,0.6];
-C0 = [-48.6655;0;0];
+%constants
+
+s0 = -16*pi; 
+t0 = 0;
 tau0 = 1/2;
 v = 1;
-t = 0;
-%iter =iter_list(i);
+%coordinate equations for analytical
+x = @(s,t) s - (2*mu/v)*tanh(v*(s-2*tau0*t)); 
+y = @(s,t) real((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0 * s + (v^2 - tau0^2)*t));
+z = @(s,t) imag((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0 * s + (v^2 - tau0^2)*t));
+%Tangent 
+Tx = @(s,t) 1 - 2*mu * sech(v*(s-2*tau0*t)).^2; 
+Ty = @(s,t) real(-1*v*(2*mu/v * sech(v*(s-2*tau0*t))).*(tanh(v*(s-2*tau0*t)) - 1i*T).*exp(1i*tau0 * s + (v^2 - tau0^2)*t));
+Tz = @(s,t) imag(-1*v*(2*mu/v * sech(v*(s-2*tau0*t))).*(tanh(v*(s-2*tau0*t)) - 1i*T).*exp(1i*tau0 * s + (v^2 - tau0^2)*t));
+%Normal 
+Nx = @(s,t) 2*mu*sech(v*(s-2*tau0*t)).^2 * sinh(v*(s-2*tau0*t));
+Ny = @(s,t) real(-1* (1- 2*mu*(tanh(v*(s-2*tau0*t)) - 1i*T).*tanh(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t)); 
+Nz = @(s,t) imag(-1* (1- 2*mu*(tanh(v*(s-2*tau0*t)) - 1i*T).*tanh(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t)); 
+%Binormal
+Bx = @(s,t) 2*mu*T*sech(v*(s-2*tau0*t));
+By = @(s,t) real(1i*mu*(1-T^2 - 2*1i*T*tanh(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t));
+Bz = @(s,t) imag(1i*mu*(1-T^2 - 2*1i*T*tanh(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t));
+
+%constants
+T0 = [Tx(s0,t0);Ty(s0,t0);Tz(s0,t0)];
+N0 = [Nx(s0,t0); Ny(s0,t0); Nz(s0,t0)];
+B0 = [Bx(s0,t0); By(s0,t0); Bz(s0,t0)];
+C0 = [x(s0,t0);y(s0,t0);z(s0,t0)]; 
+
+%curve generation
 iter = 5000;
-k = @(s) 2*v*sech(v*(s - 2*tau0*t));
+k = @(s) 2*v*sech(v*(s - 2*tau0*t0));
 tau = @(s) tau0;
-s_span = [-16*pi,16*pi];
-[C,T,N,B] = curve_gen(C0,T0,N0,B0,k,tau,s_span,iter,0);
+s = linspace(s0,-s0,iter); 
+[C1,T1,N1,B1] = c_gen(C0,T0,N0,B0,k,tau,s);
 
-s = linspace(s_span(1),s_span(2),iter); 
+%Analytical Solution Comparison
 
-C_1 = C'; 
-T_1 = T'; 
+plot3(C1(1,:),C1(2,:),C1(3,:))
+%{
+hold on
+plot3(x(s,t0),y(s,t0),z(s,t0))
+legend('Approx','Analytical')
+%}
 
-plot3(C_1(1,:),C_1(2,:),C_1(3,:))
+%plot(s,vecnorm(C1 - [x(s,t0);y(s,t0);z(s,t0)]))
+
+
+%multi-time plotting
+%{
 hold on
 
 for i=1:2
@@ -30,22 +60,8 @@ for i=1:2
     T_1 = tangent(C_1,s); 
 end
 legend('C1','C2','C3','C4')
+%}
 
-
-%Constants
-tau0 = 1/2;
-v = 1;
-mu = v^2/(v^2 + tau0^2); 
-T = tau0/v; 
-
-%coordinate equations good!
-x = @(s,t) s - (2*mu/v)*tanh(v*(s-2*tau0*t)); 
-y = @(s,t) real((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t));
-z = @(s,t) imag((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0*s + (v^2 - tau0^2)*t)); 
-
-%graphing constants
-
-%plot3(x(s,t),y(s,t),z(s,t))
 %{
 C_act = [x(s,t); y(s,t); z(s,t)]; 
 C_diff = C_act - C_1; 
@@ -60,3 +76,12 @@ legend('1000','2500','5000','10000','50000')
 %}
 
 
+kB = zeros(3,length(B));
+for i=1:length(B)
+    kB(:,i) = B(:,i)*k(s(i));
+end
+plot(s,k(s))
+hold on
+plot(s,vecnorm(kB))
+legend('Act','Calc')
+%}
