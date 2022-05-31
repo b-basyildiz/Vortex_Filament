@@ -7,6 +7,8 @@ s0 = -16*pi;
 t0 = 0;
 tau0 = 1/2;
 v = 1;
+mu = v^2/(v^2 + tau0^2); 
+T = tau0/v; 
 %coordinate equations for analytical
 x = @(s,t) s - (2*mu/v)*tanh(v*(s-2*tau0*t)); 
 y = @(s,t) real((2*mu/v * sech(v*(s-2*tau0*t))) .* exp(1i*tau0 * s + (v^2 - tau0^2)*t));
@@ -32,19 +34,19 @@ C0 = [x(s0,t0);y(s0,t0);z(s0,t0)];
 
 %curve generation
 iter = 5000;
-k = @(s) 2*v*sech(v*(s - 2*tau0*t0));
+k = @(s,t) 2*v*sech(v*(s - 2*tau0*t));
 tau = @(s) tau0;
 s = linspace(s0,-s0,iter); 
-[C1,T1,N1,B1] = c_gen(C0,T0,N0,B0,k,tau,s);
+[C1,T1,N1,B1] = c_gen(C0,T0,N0,B0,k,tau,s,0);
 
 %Analytical Solution Comparison
 
-plot3(C1(1,:),C1(2,:),C1(3,:))
-%{
-hold on
+%plot3(C1(1,:),C1(2,:),C1(3,:))
+
+%hold on
 plot3(x(s,t0),y(s,t0),z(s,t0))
-legend('Approx','Analytical')
-%}
+%legend('Approx','Analytical')
+
 
 %plot(s,vecnorm(C1 - [x(s,t0);y(s,t0);z(s,t0)]))
 
@@ -75,13 +77,7 @@ ylabel('Absolute Error')
 legend('1000','2500','5000','10000','50000')
 %}
 
-
-kB = zeros(3,length(B));
-for i=1:length(B)
-    kB(:,i) = B(:,i)*k(s(i));
-end
-plot(s,k(s))
-hold on
-plot(s,vecnorm(kB))
-legend('Act','Calc')
-%}
+%C2 = C1 + 1/iter*kappaB(k,T1,s,100); 
+C2 = kappaB(k,T1,s,1); 
+hold on 
+plot3(C2(1,:),C2(2,:),C2(3,:))

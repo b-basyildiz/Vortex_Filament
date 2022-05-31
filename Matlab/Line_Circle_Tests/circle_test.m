@@ -15,6 +15,7 @@ y = @(t) r*sin(t);
 t = linspace(0,2*pi,iter); 
 point_circle = [x(t);y(t);zeros(1,iter)];
 %plotting 
+V = Biot_Savart(C,T,)
 
 %{
 plot3(C(1,:),C(2,:),C(3,:))
