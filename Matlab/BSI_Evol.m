@@ -10,8 +10,8 @@ function C_out = BSI_Evol(C,s)
     
     for i = 1:length(C)
         p = C(:,i); 
-        T = Derivative(C,h); 
-        %Delta_C(:,i) = Biot_Savart(C,Derivative(C,h),x,s);
+        %T = Derivative(C,h); 
+        %Delta_C(:,i) = Biot_Savart(C,Derivative(C,h),p,s);
         Delta_C(:,i) = V_Evol(C,T,p,s,i);
     end
     
