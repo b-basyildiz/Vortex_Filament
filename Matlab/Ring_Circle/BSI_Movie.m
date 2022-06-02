@@ -1,14 +1,15 @@
+function M = BSI_Movie
+%BSI_Movie is a movie of the BSI integral on a circle over time.
 close all
 
-iter = 500; % we need iteration # + 1 so that we don't overlap at the end point
+%circle generation
+iter = 500; 
 s = linspace(0,2*pi,iter);
 s(end) = [];
 ys = @(s) cos(s); 
 zs = @(s) sin(s);
 C = [zeros(1,length(s));ys(s);zs(s)];
-h = 2*pi*abs(s(2) - s(1)); 
-T = Derivative(C,h);
-
+T = Derivative(C);
 f = figure;
 loops = iter; 
 
@@ -22,20 +23,23 @@ for j =1:length(s)
     Ct(:,j)  = [];%deletion 
     Tt(:,j) = []; 
     st(j) = [];
+    
+    dV = zeros(3,length(st));
 
     for i = 1:length(st)
         crosses(:,i) = cross(Tt(:,i),C(:,j) - Ct(:,i)); 
-        norms(i) = norm(C(:,j) - Ct(:,i));
+        norms(i) = norm(C(:,j) - Ct(:,i))^3;
+        dV(:,i) = crosses(:,i)/norms(i); 
     end
 
     cla; 
-    plot(crosses(1,:))
-    hold on
-    plot(norms)
+    plot(dV(1,:))
     legend('Numerator','Denominator')
 
     drawnow
     M(j) = getframe;
+
 end
 
-movie(M,30)
+end
+

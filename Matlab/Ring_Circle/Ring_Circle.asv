@@ -1,24 +1,24 @@
 %Script that evolutions the vortex curve and plots it
-
+format long
 %Circle making 
-iter = 500; % we need iteration # + 1 so that we don't overlap at the end point
+iter = 1000; % we need iteration # + 1 so that we don't overlap at the end point
 s = linspace(0,2*pi,iter);
 s(end) = [];
 ys = @(s) cos(s); 
 zs = @(s) sin(s);
-C0 = [zeros(1,length(s));ys(s);zs(s)];
+C = [zeros(1,length(s));ys(s);zs(s)];
 h = 2*pi*abs(s(2) - s(1)); 
-T = Derivative(C0,h);
+eps = 0.001; %ad hoc 
 
 
 %First test iteration 
-%{
-C1 = BSI_Evol(C0,s); 
+plot(C(1,:),C(2,:),C)
 
-plot3(C0(1,:),C0(2,:),C0(3,:))
-hold on
-plot3(C1(1,:),C1(2,:),C1(3,:))
-%}
+for i=1:10
+    
+
+
+
 
 %individual Curve evolution error checking 
 
@@ -29,13 +29,20 @@ for i=1:1
 end
 %}
 %plot(V(1,:))
-
-i = 50;
+%{
+i = 250;
 p = C0(:,i);
 C0(:,i) = [];
 T(:,i) = [];
 s(i) = [];
-Biot_Savart(C0,T,p,s);
+Biot_Savart(C0,T,p,s,0);
+%}
+%}
+%}
+
+
+
+
 
 
 
