@@ -12,7 +12,7 @@ function Delta_C = BSI_Evol(C)
     Delta_C = 1/length(C) * Delta_C;
     
     function V = V_Evol(C,T,p,i)
-        %V_Evol is a helper function that removes the respective point we
+        %V_EVOL is a helper function that removes the respective point we
         %are taking the BSI off so that a singularity does not arise.
         %V_Evol uses flip to minimize the trapezoidal error (see 
         %Biot_Savart for details). 

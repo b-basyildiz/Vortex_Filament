@@ -1,5 +1,5 @@
 function V = Biot_Savart(C,T,p,flip)
-%Biot Savart discretely calcuates the velocity vector for a given point,
+%BIOT_SAVART discretely calcuates the velocity vector for a given point,
 %given a vorticity filament curve and its tangents. The flip variable is
 %used to minimize the error from the trapeziodal quadrature. 
     dV = zeros(3,length(C));
