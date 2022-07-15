@@ -1,12 +1,12 @@
 function DeltaC = kappaB(C)
-%KAPPAB This function uses an evolution of the curvature times the binormal
-%curve 
+%KAPPAB(curve) 
+% DEF: Uses a kappa Binormal approximation to calculate the BSI integral. 
     T = Derivative(C); 
     kN = Derivative(T); 
     k = vecnorm(kN); 
     N = kN ./ k;
     B = cross(T,N);
-    DeltaC = 1/length(C) * k .* B; 
+    DeltaC = k .* B; 
 
 end
 

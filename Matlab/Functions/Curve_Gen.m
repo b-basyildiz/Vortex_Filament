@@ -1,5 +1,7 @@
-function C = Curve_Gen(iter,c_type)
-%CURVE_GEN This function generates a curve given a respective type. 
+function C = Curve_Gen(c_type,iter)
+%CURVE_GEN(curve type, # points)
+% DEF: Generates a specified curve 
+% Curve types: {'circle', 'ellipse', 'soliton', 'rough ring', 'ring soliton'}
     switch lower(c_type)
         case 'circle'
             s = linspace(0,2*pi,iter);

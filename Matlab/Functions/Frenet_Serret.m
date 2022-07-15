@@ -1,5 +1,8 @@
 function [C,T,N,B] = Frenet_Serret(C0,T0,N0,B0,k,tau,s,t)
-    %FRENET_SERRET Generates curve for given initial conditions and curvature + torsion. 
+    %FRENET_SERRET(curve0, tangent0, normal0, binormal0, curvature, 
+    %  torsion, gamma, time)
+    % DEF: Generates curve for given initial conditions, curvature,
+    %  torsion, curve discretization and time. 
     [~,X] = ode89(@TNB,s,[C0(1);T0(1); N0(1);B0(1)]);
     [~,Y] = ode89(@TNB,s,[C0(2);T0(2); N0(2);B0(2)]);
     [~,Z] = ode89(@TNB,s,[C0(3);T0(3); N0(3);B0(3)]);

@@ -1,5 +1,6 @@
 function T = Derivative(C)
-% DERIVATIVE Generates a numerical derivative of a curve
+% DERIVATIVE(curve) 
+% DEF: Generates a numerical derivative of a curve in the 's' dimension
 l = length(C); 
 T = zeros(3,l);
 h = norm(C(:,2) - C(:,1));

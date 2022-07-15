@@ -1,6 +1,7 @@
 function Delta_C = BSI_Evol(C)
-    %BSI_EVOL generates the next timestep of a curve using the Biot Savart
-    %Integral
+    %BSI_EVOL(curve) 
+    % DEF: generates the next timestep of a curve using the Biot Savart
+    %  Integral
     
     Delta_C = zeros(size(C));
     
