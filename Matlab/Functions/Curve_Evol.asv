@@ -13,6 +13,7 @@ function [] = Curve_Evol(c_type,f_type,iter,evol_num)
     p2 = zeros(size(C));
     p3 = zeros(size(C));
     hold on
+    pdC = []; %previous dC values
     for i=1:evol_num
         dC = zeros(size(C)); 
         switch lower(f_type)
@@ -29,12 +30,10 @@ function [] = Curve_Evol(c_type,f_type,iter,evol_num)
                         p2 = dC;
                     elseif i == 3
                         p3 = dC;
-                    end
                 else
-                    dC = 1/24 * (-9*p1 + 37*p2 - 59*p3 + 55*BSI_Evol(C));
-                    p1 = p2;
-                    p2 = p3;
-                    p3 = dC; 
+                    dC = 1/24 * (-9*p1 + 37*pdC(:,length(C)+1:2*length(C)) - 59*pdC(:,2*length(C)+1:end) + 55*BSI_Evol(C));
+                    pdC(:,1:2*length(C)) = pdC(:,length(C)+1:end);
+                    pdC(:,2*length(C)+1:end) = dC;
                 end
             case 'kb'
                 dC = kappaB(C);
@@ -43,18 +42,11 @@ function [] = Curve_Evol(c_type,f_type,iter,evol_num)
                     V2 = kappaB(C + k/2 * V1);
                     V3 = kappaB(C + k/2 * V2);
                     dC = kappaB(C + k*V3);  
-                    if i == 1
-                        p1 = dC;
-                    elseif i == 2
-                        p2 = dC;
-                    elseif i == 3
-                        p3 = dC;
-                    end
+                    pdC = [pdC,dC];
                 else
-                    dC = 1/24 * (-9*p1 + 37*p2 - 59*p3 + 55*kappaB(C));
-                    p1 = p2;
-                    p2 = p3;
-                    p3 = dC; 
+                    dC = 1/24 * (-9*pdC(:,1:length(C)) + 37*pdC(:,length(C)+1:2*length(C)) - 59*pdC(:,2*length(C)+1:end) + 55*kappaB(C));
+                    pdC(:,1:2*length(C)) = pdC(:,length(C)+1:end);
+                    pdC(:,2*length(C)+1:end) = dC;
                 end
             case 'kb+'
                 dC = kappaB_Exp(C); 
@@ -63,18 +55,10 @@ function [] = Curve_Evol(c_type,f_type,iter,evol_num)
                     V2 = kappaB_Exp(C + k/2 * V1);
                     V3 = kappaB_Exp(C + k/2 * V2);
                     dC = kappaB_Exp(C + k*V3);
-                    if i == 1
-                        p1 = dC;
-                    elseif i == 2
-                        p2 = dC;
-                    elseif i == 3
-                        p3 = dC;
-                    end
+                    pdC = [pdC,dC];
                 else
-                    dC = 1/24 * (-9*p1 + 37*p2 - 59*p3 + 55*kappaB_Exp(C));
-                    p1 = p2;
-                    p2 = p3;
-                    p3 = dC; 
+                    dC = 1/24 * (-9*pdC(:,1:length(C)) + 37*pdC(:,length(C)+1:2*length(C)) - 59*pdC(:,2*length(C)+1:end) + 55*kappaB_Exp(C));
+                    pdC(:,1:length(C)) = dC; 
                 end
             otherwise
                 error('Specified Function %s is not able to be used. \nSelect one of the following curves {BSI, kB, kB+}',f_type)

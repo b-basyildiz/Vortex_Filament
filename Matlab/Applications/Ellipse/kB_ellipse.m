@@ -1,5 +1,5 @@
 iter = 5000;
-C = Curve_Gen(iter,'ellipse');
+C = Curve_Gen('ellipse',iter);
 plot3(C(1,:),C(2,:),C(3,:))
 hold on
 

@@ -1,14 +1,10 @@
-iter = 5000; 
-s = linspace(0,2*pi,iter);
-s(end) = [];
-ys = @(s) cos(s); 
-zs = @(s) sin(s);
-C = [zeros(1,length(s));ys(s);zs(s)];
-
+%Curve Generation
+iter = 500;
+C = Curve_Gen('circle',iter); 
+%Evolution
 plot3(C(1,:),C(2,:),C(3,:))
 hold on
-
-evol_num = 3;
+evol_num = 2;
 for i=1:evol_num
     C = C + kappaB(C); 
     plot3(C(1,:),C(2,:),C(3,:))
