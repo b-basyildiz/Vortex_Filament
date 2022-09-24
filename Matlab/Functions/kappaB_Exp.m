@@ -6,6 +6,6 @@ function DeltaC = kappaB_Exp(C)
     k = vecnorm(kN); 
     N = kN ./ k;
     B = cross(T,N);
-    DeltaC = (k .* B + k .* B^3);
-
+    DeltaC = (k .* B + k .* B.^3);
+    DeltaC = DeltaC/length(C); 
 end

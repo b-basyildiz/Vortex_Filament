@@ -1,6 +1,6 @@
 %Curve Generation
 iter = 5000;
-C = Curve_Gen(iter,'soliton'); 
+C = Curve_Gen('soliton',iter); 
 %Evolution
 plot3(C(1,:),C(2,:),C(3,:))
 hold on

@@ -26,8 +26,8 @@ function Delta_C = BSI_Evol(C)
             flip = 0;
         end 
         
-        %V =Biot_Savart(C,T,p,flip);
-        V =BSInterpolate(C,T,p); 
+        V =Biot_Savart(C,T,p,flip);
+        %V =BSInterpolate(C,T,p); 
     end
 end
 
